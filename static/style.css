@@ -394,30 +394,187 @@ h1 {
         padding: 24px;
     }
 
+    .navbar {
+        flex-wrap: wrap;
+        row-gap: 12px;
+    }
+
     .nav-links {
-        display: none;
+        order: 3;
+        width: 100%;
+        gap: 24px;
+        overflow-x: auto;
+        padding: 12px 0 4px;
+        scrollbar-width: thin;
+    }
+
+    .nav-links a {
+        flex: 0 0 auto;
+    }
+
+    .book-now {
+        margin-left: auto;
     }
 
     .hero-content {
         height: auto;
-        grid-template-columns: 1fr;
-        gap: 30px;
-        padding-top: 180px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+        padding-top: clamp(72px, 14vh, 160px);
     }
 
     h1 {
-        font-size: 52px;
+        font-size: clamp(48px, 8vw, 68px);
     }
 
     .details {
-        margin-top: 140px;
-        gap: 40px;
+        margin-top: clamp(40px, 10vh, 100px);
+        gap: 24px;
+    }
+
+    .details p {
+        width: auto;
+        max-width: 230px;
     }
 
     .booking-card {
-        margin-bottom: 0;
+        width: 100%;
+        max-width: 560px;
+        margin: 0 auto 24px;
+        padding: clamp(18px, 4vw, 28px);
+    }
+}
+
+@media (max-width: 520px) {
+    .hero {
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 18px;
+        background: #0b1a2a;
     }
 
+    .hero-video {
+        height: min(58vh, 480px);
+        height: min(58svh, 480px);
+        bottom: auto;
+    }
+
+    .hero-overlay {
+        height: min(58vh, 480px);
+        height: min(58svh, 480px);
+        bottom: auto;
+        background: linear-gradient(rgba(17, 45, 65, 0.01), rgba(8, 20, 38, 0.12));
+    }
+
+    .title-side {
+        display: contents;
+    }
+
+    .hero-content > h1 {
+        order: 1;
+        animation: contentEnter 1.6s cubic-bezier(.22, 1, .36, 1) 0.25s both;
+    }
+
+    .details {
+        order: 2;
+        margin-top: clamp(24px, 5vh, 40px);
+    }
+
+    .booking-card {
+        order: 3;
+        width: min(100%, 340px);
+        margin: clamp(28px, 6vh, 52px) auto 8px;
+        padding: 14px;
+        background: transparent;
+        backdrop-filter: none;
+    }
+
+    .logo {
+        gap: 6px;
+        font-size: 17px;
+        letter-spacing: 1.5px;
+    }
+
+    .logo-icon {
+        width: 44px;
+        height: 34px;
+    }
+
+    .book-now {
+        padding: 11px 16px;
+    }
+
+    .nav-links {
+        gap: 20px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+
+    .hero-content {
+        padding-top: clamp(36px, 8vh, 70px);
+    }
+
+    .details {
+        gap: 16px;
+        animation: contentEnter 1.4s cubic-bezier(.22, 1, .36, 1) 1s both;
+    }
+
+    .details p {
+        font-size: 12px;
+    }
+
+    .rating strong {
+        font-size: 20px;
+    }
+
+    .rating span {
+        font-size: 11px;
+    }
+
+    .booking-card h2 {
+        margin-bottom: 12px;
+        padding: 10px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 18px;
+    }
+
+    .times div,
+    .dates div {
+        padding: 8px;
+        font-size: 11px;
+    }
+
+    .times {
+        margin-bottom: 14px;
+    }
+
+    .price-row {
+        gap: 10px;
+    }
+
+    .price-row > div {
+        padding: 9px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .reserve {
+        padding: 11px;
+    }
+
+    .booking-dialog {
+        max-height: 90vh;
+        max-height: 90dvh;
+        overflow-y: auto;
+    }
+
+    .booking-dialog input,
+    .booking-dialog select {
+        font-size: 16px;
+    }
 }
 
 .logo {
