@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>PPortfolio</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=10">
+</head>
+
+<body>
+    <main class="hero">
+        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="auto"
+            poster="{{ url_for('static', filename='bg-poster.jpg') }}">
+            <source src="{{ url_for('static', filename='bg.mp4') }}?v=2" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+
+        <nav class="navbar">
+
+<div class="logo">
+    <svg class="logo-icon" viewBox="0 0 180 90" fill="none">
+    <path d="M8 72 L57 12 L88 49 L111 28 L165 72"
+          stroke="white" stroke-width="5"
+          stroke-linejoin="round"/>
+    <path d="M42 30 L57 12 L72 30 L61 25 L57 31 L52 25 Z"
+          fill="white"/>
+    <path d="M101 41 L111 28 L123 42 L113 37 L110 42 Z"
+          fill="white"/>
+    <path d="M8 72 L20 45 L32 72 Z" fill="white"/>
+    <path d="M30 72 L40 51 L50 72 Z" fill="white"/>
+</svg>
+<span>MISTHAVEN</span>
+</div>
+
+
+            <div class="nav-links">
+                <a href="#locations" data-nav="Locations">Locations</a>
+                <a href="#rooms" data-nav="Rooms">Rooms</a>
+                <a href="#experiences" data-nav="Experiences">Experiences</a>
+                <a href="#contact" data-nav="Contact">Contact</a>
+            </div>
+
+            <button class="book-now" type="button">Book Now</button>
+        </nav>
+
+        <div class="hero-content">
+            <div class="title-side">
+                <h1>
+                    Nature's<br>
+                    Perfect<br>
+                    Hideaways
+                </h1>
+
+                <div class="details">
+                    <p>Discover handcrafted luxury cabins in breathtaking locations.</p>
+
+                    <div class="rating">
+                        <strong>★ 4.7</strong>
+                        <span>from 1,800+ stays</span>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="booking-card">
+                <h2>Evergreen<br>Pine Family Lodge</h2>
+
+                <div class="dates">
+                    <div>Feb 11</div>
+                    <div>Mar 25</div>
+                </div>
+
+                <div class="times">
+                    <div>
+                        <small>Check-in</small>
+                        <span>After 2:00 PM</span>
+                    </div>
+
+                    <div>
+                        <small>Check-out</small>
+                        <span>Until 11:00 AM</span>
+                    </div>
+                </div>
+
+                <div class="price-row">
+                    <div><strong>$359</strong><small>/night</small></div>
+                    <div>2-5 guests</div>
+                </div>
+
+                <button class="reserve" type="button">Reserve</button>
+            </aside>
+        </div>
+    </main>
+
+    <dialog class="booking-dialog" id="bookingDialog">
+        <button class="dialog-close" type="button" aria-label="Close">&times;</button>
+        <h2 id="dialogTitle">Reserve your stay</h2>
+        <p id="dialogMessage">Choose your details and confirm your reservation.</p>
+        <form id="bookingForm">
+            <label>
+                Name
+                <input name="name" type="text" placeholder="Your name" required>
+            </label>
+            <label>
+                Email
+                <input name="email" type="email" placeholder="you@example.com" required>
+            </label>
+            <label>
+                Guests
+                <select name="guests">
+                    <option>2 guests</option>
+                    <option>3 guests</option>
+                    <option>4 guests</option>
+                    <option>5 guests</option>
+                </select>
+            </label>
+            <button class="dialog-submit" type="submit">Confirm Reservation</button>
+        </form>
+    </dialog>
+
+<script>
+    (function () {
+        var v = document.getElementById("heroVideo");
+        if (!v) return;
+        v.muted = true;
+        v.loop = true;
+        v.defaultPlaybackRate = 1;
+        v.playbackRate = 1;
+        function go() { var p = v.play(); if (p && p.catch) p.catch(function () { }); }
+        go();
+        v.addEventListener("pause", function () { if (!document.hidden) go(); });
+        v.addEventListener("ended", function () {
+            v.currentTime = 0;
+            go();
+        });
+        document.addEventListener("visibilitychange", function () { if (!document.hidden) go(); });
+        ["click", "touchstart", "scroll", "keydown"].forEach(function (e) {
+            window.addEventListener(e, go, { once: true, passive: true });
+        });
+        v.addEventListener("error", function () { console.warn("hero video failed to load", v.currentSrc); });
+    })();
+
+    (function () {
+        var dialog = document.getElementById("bookingDialog");
+        var title = document.getElementById("dialogTitle");
+        var message = document.getElementById("dialogMessage");
+        var form = document.getElementById("bookingForm");
+        var navLinks = document.querySelectorAll("[data-nav]");
+
+        function openBooking(label) {
+            title.textContent = label === "Reserve" ? "Reserve Evergreen Pine Lodge" : "Book your cabin";
+            message.textContent = label === "Reserve"
+                ? "Complete the details for your selected lodge."
+                : "Choose your details and confirm your reservation.";
+            if (typeof dialog.showModal === "function") {
+                dialog.showModal();
+            } else {
+                dialog.setAttribute("open", "");
+            }
+        }
+
+        document.querySelector(".book-now").addEventListener("click", function () {
+            openBooking("Book");
+        });
+        document.querySelector(".reserve").addEventListener("click", function () {
+            openBooking("Reserve");
+        });
+
+        document.querySelector(".dialog-close").addEventListener("click", function () {
+            dialog.close();
+        });
+
+        dialog.addEventListener("click", function (event) {
+            if (event.target === dialog) dialog.close();
+        });
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            var name = form.elements.name.value.trim();
+            if (name) {
+                title.textContent = "Reservation confirmed";
+                message.textContent = "Thank you, " + name + ". Your stay request has been received.";
+                form.reset();
+            }
+        });
+
+        navLinks.forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                event.preventDefault();
+                navLinks.forEach(function (item) { item.classList.remove("active"); });
+                link.classList.add("active");
+
+                var name = link.dataset.nav;
+                title.textContent = name;
+                message.textContent = name === "Contact"
+                    ? "Leave your details and our team will contact you."
+                    : "Explore " + name.toLowerCase() + " for Evergreen Pine Family Lodge.";
+                openBooking(name);
+            });
+        });
+    })();
+</script>
+</body>
+
+</html>
