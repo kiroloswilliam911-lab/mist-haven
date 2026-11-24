@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width">
     <title>PPortfolio</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=16">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=17">
 </head>
 
 <body>
     <main class="hero">
-        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="auto"
+        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="none"
             poster="{{ url_for('static', filename='bg-poster.jpg') }}">
-            <source src="{{ url_for('static', filename='bg.mp4') }}?v=2" type="video/mp4">
+            <source data-src="{{ url_for('static', filename='bg.mp4') }}?v=2" type="video/mp4">
         </video>
         <div class="hero-overlay"></div>
 
@@ -122,23 +122,26 @@
 <script>
     (function () {
         var v = document.getElementById("heroVideo");
-        if (!v) return;
-        v.muted = true;
-        v.loop = true;
-        v.defaultPlaybackRate = 1;
-        v.playbackRate = 1;
-        function go() { var p = v.play(); if (p && p.catch) p.catch(function () { }); }
-        go();
-        v.addEventListener("pause", function () { if (!document.hidden) go(); });
-        v.addEventListener("ended", function () {
-            v.currentTime = 0;
-            go();
-        });
-        document.addEventListener("visibilitychange", function () { if (!document.hidden) go(); });
-        ["click", "touchstart", "scroll", "keydown"].forEach(function (e) {
-            window.addEventListener(e, go, { once: true, passive: true });
-        });
-        v.addEventListener("error", function () { console.warn("hero video failed to load", v.currentSrc); });
+        var source = v.querySelector("source");
+        var desktop = window.matchMedia("(min-width: 521px)");
+
+        function syncVideoSource() {
+            if (desktop.matches && !source.hasAttribute("src")) {
+                source.setAttribute("src", source.dataset.src);
+                v.load();
+            } else if (!desktop.matches && source.hasAttribute("src")) {
+                v.pause();
+                source.removeAttribute("src");
+                v.load();
+            }
+        }
+
+        syncVideoSource();
+        if (typeof desktop.addEventListener === "function") {
+            desktop.addEventListener("change", syncVideoSource);
+        } else {
+            desktop.addListener(syncVideoSource);
+        }
     })();
 
     (function () {
