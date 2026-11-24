@@ -125,10 +125,26 @@
         var source = v.querySelector("source");
         var desktop = window.matchMedia("(min-width: 521px)");
 
+        function tryPlayVideo() {
+            if (!desktop.matches || !source.hasAttribute("src")) return;
+
+            var playRequest = v.play();
+            if (playRequest && typeof playRequest.catch === "function") {
+                playRequest.catch(function (error) {
+                    if (error.name === "NotAllowedError") {
+                        window.addEventListener("pointerdown", tryPlayVideo, { once: true });
+                    } else if (error.name !== "AbortError") {
+                        console.warn("hero video playback failed", error);
+                    }
+                });
+            }
+        }
+
         function syncVideoSource() {
             if (desktop.matches && !source.hasAttribute("src")) {
                 source.setAttribute("src", source.dataset.src);
                 v.load();
+                tryPlayVideo();
             } else if (!desktop.matches && source.hasAttribute("src")) {
                 v.pause();
                 source.removeAttribute("src");
