@@ -11,9 +11,9 @@
 
 <body>
     <main class="hero">
-        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="none"
+        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="auto"
             poster="{{ url_for('static', filename='bg-poster.jpg') }}">
-            <source data-src="{{ url_for('static', filename='bg.mp4') }}?v=2" type="video/mp4">
+            <source src="{{ url_for('static', filename='bg.mp4') }}?v=3" type="video/mp4">
         </video>
         <div class="hero-overlay"></div>
 
@@ -122,12 +122,9 @@
 <script>
     (function () {
         var v = document.getElementById("heroVideo");
-        var source = v.querySelector("source");
-        var desktop = window.matchMedia("(min-width: 521px)");
+        v.muted = true;
 
         function tryPlayVideo() {
-            if (!desktop.matches || !source.hasAttribute("src")) return;
-
             var playRequest = v.play();
             if (playRequest && typeof playRequest.catch === "function") {
                 playRequest.catch(function (error) {
@@ -140,24 +137,10 @@
             }
         }
 
-        function syncVideoSource() {
-            if (desktop.matches && !source.hasAttribute("src")) {
-                source.setAttribute("src", source.dataset.src);
-                v.load();
-                tryPlayVideo();
-            } else if (!desktop.matches && source.hasAttribute("src")) {
-                v.pause();
-                source.removeAttribute("src");
-                v.load();
-            }
-        }
-
-        syncVideoSource();
-        if (typeof desktop.addEventListener === "function") {
-            desktop.addEventListener("change", syncVideoSource);
-        } else {
-            desktop.addListener(syncVideoSource);
-        }
+        tryPlayVideo();
+        v.addEventListener("error", function () {
+            console.warn("hero video failed to load", v.currentSrc);
+        });
     })();
 
     (function () {
